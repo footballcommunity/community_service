@@ -2,8 +2,8 @@ package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import practice.communityservice.domain.Member;
-import practice.communityservice.domain.model.enums.UserStatus;
+import practice.communityservice.domain.validation.DuplicatedEmailValidator;
+import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.dto.SignupRequestDto;
 import practice.communityservice.dto.SignupResponseDto;
 import practice.communityservice.repository.MemberRepository;
@@ -11,18 +11,13 @@ import practice.communityservice.repository.MemberRepository;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        Member newMember = new Member(
-                null,
-                signupRequestDto.getRole(),
-                signupRequestDto.getEmail(),
-                signupRequestDto.getUsername(),
-                signupRequestDto.getPassword(),
-                null,
-                UserStatus.ACTIVE
+        ValidatorBucket validatorBucket = ValidatorBucket.of().consistOf(
+                new DuplicatedEmailValidator(memberRepository, signupRequestDto.getEmail())
         );
-        memberRepository.save(newMember);
-        return SignupResponseDto.from(newMember);
+        validatorBucket.validate();
+        Long id = memberRepository.save(signupRequestDto);
+        return new SignupResponseDto(id);
     }
 }
