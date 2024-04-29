@@ -36,7 +36,7 @@ public class WebSecurityConfig{
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
                         "/members/signin",
-                        "members/signup").permitAll()
+                        "/members/signup").permitAll()
                 .anyRequest().authenticated()
         );
         // Jwt Execptionhandling
@@ -45,8 +45,8 @@ public class WebSecurityConfig{
 
         // Jwt Filter 추가
         http.addFilterBefore(new JwtAuthFilter(jwtUtill), UsernamePasswordAuthenticationFilter.class);
-
-
         return http.build();
     }
+
+
 }
