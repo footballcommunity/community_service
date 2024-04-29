@@ -8,14 +8,14 @@ import practice.communityservice.domain.model.User;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class DuplicatedEmailValidator extends AbstractValidator{
+public class EmailExistValidator extends AbstractValidator{
     private final Optional<User> foundUser;
     @Override
     public void validate() {
-        if(foundUser.isPresent()){
+        if(foundUser.isEmpty()){
             throw new BadRequestException(
-                    ErrorCode.ROW_ALREADY_EXIST,
-                    "이미 존재하는 이메일입니다."
+                    ErrorCode.ROW_DOES_NOT_EXIST,
+                    "존재하지 않는 이메일입니다."
             );
         }
     }
