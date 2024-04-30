@@ -5,13 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
-import practice.communityservice.dto.GetPageListRequestDto;
 import practice.communityservice.dto.GetPageListResponseDto;
 import practice.communityservice.dto.PostArticleRequestDto;
 import practice.communityservice.dto.PostArticleResponseDto;
 import practice.communityservice.service.BoardService;
-
-import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/board")

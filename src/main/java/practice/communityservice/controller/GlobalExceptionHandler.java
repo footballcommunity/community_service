@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import practice.communityservice.domain.exceptions.BadRequestException;
+import practice.communityservice.domain.exceptions.ErrorCode;
 import practice.communityservice.dto.ExceptionDto;
+
+import java.sql.SQLException;
 
 @RestControllerAdvice
 @Slf4j
@@ -59,11 +62,11 @@ public class GlobalExceptionHandler {
 //        GlobalExceptionHandler.log.error("error message", exception);
 //        return new ExceptionDto(ErrorCode.API_NOT_ACCESSIBLE, exception.getMessage());
 //    }
-//
-//    @ExceptionHandler(value = {Exception.class})
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ExceptionDto unknownException(Exception exception) {
-//        GlobalExceptionHandler.log.error("error message", exception);
-//        return new ExceptionDto(ErrorCode.INTERNAL_SERVER, "Internal server error");
-//    }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionDto unknownException(Exception exception) {
+        GlobalExceptionHandler.log.error("error message", exception);
+        return new ExceptionDto(ErrorCode.INTERNAL_SERVER, "Internal server error");
+    }
 }

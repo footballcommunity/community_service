@@ -44,6 +44,7 @@ public enum ErrorCode {
      * 500 Internal Server Error
      */
     INTERNAL_SERVER(5000),
+    DATABASE_ERROR(5001),
 
     /**
      * 503 Service Unavailable Error
