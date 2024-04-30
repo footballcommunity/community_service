@@ -2,17 +2,20 @@ package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import practice.communityservice.config.JwtUtill;
 import practice.communityservice.domain.model.Article;
+import practice.communityservice.domain.model.enums.SearchType;
 import practice.communityservice.domain.validation.AuthorUserMatchValidator;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.domain.validation.ValueNotZeroValidator;
 import practice.communityservice.dto.GetPageListResponseDto;
+import practice.communityservice.dto.PageDto;
 import practice.communityservice.dto.PostArticleRequestDto;
 import practice.communityservice.dto.PostArticleResponseDto;
 import practice.communityservice.repository.BoardRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,13 +41,10 @@ public class BoardService {
         if(endPage  > maxPage){
             endPage = maxPage;
         }
-
+        PageDto pageDto = new PageDto(articleCount, pageSize, blockSize, page);
         return GetPageListResponseDto.builder()
+                .page(pageDto)
                 .articleList(articleList)
-                .page(page)
-                .maxPage(maxPage)
-                .startPage(startPage)
-                .endPage(endPage)
                 .build();
     }
 
@@ -57,19 +57,17 @@ public class BoardService {
                 .consistOf(new ValueNotZeroValidator(blockSize));
         validatorBucket.validate();
         // Logic
+
         int maxPage = (int) Math.ceil((double) categoryArticleCount / pageSize);
         int startPage = (((int)(Math.ceil((double) page / blockSize))) - 1) * blockSize + 1;
         int endPage = startPage + blockSize - 1;
         if(endPage  > maxPage){
             endPage = maxPage;
         }
-
+        PageDto pageDto = new PageDto(categoryArticleCount, pageSize, blockSize, page);
         return GetPageListResponseDto.builder()
+                .page(pageDto)
                 .articleList(categoryArticleList)
-                .page(page)
-                .maxPage(maxPage)
-                .startPage(startPage)
-                .endPage(endPage)
                 .build();
     }
 
@@ -85,5 +83,30 @@ public class BoardService {
         validatorBucket.validate();
 
         return new PostArticleResponseDto(postId);
+    }
+
+    public GetPageListResponseDto getSearchedPageList(int page, int pageSize, int blockSize, SearchType searchType, String keyword) {
+        List<Article> searchedPageList = new ArrayList<>();
+        int totalCount = 0;
+        // searchTyp 1.제목 2.작성자 3.내용
+        switch (searchType){
+            case TITLE -> {
+                searchedPageList = boardRepository.getPageByTitle(page, pageSize, keyword);
+                totalCount = boardRepository.getPageCountByTitle(keyword);
+            }
+            case AUTHOR -> {
+                searchedPageList = boardRepository.getPageByAuthor(page, pageSize, keyword);
+                totalCount = boardRepository.getPageCountByTitle(keyword);
+            }
+            case CONTENT -> {
+                searchedPageList=boardRepository.getPageByContent(page, pageSize, keyword);
+                totalCount = boardRepository.getPageCountByContent(keyword);
+            }
+        }
+        PageDto pageDto = new PageDto(totalCount, pageSize, blockSize, page);
+        return GetPageListResponseDto.builder()
+                .page(pageDto)
+                .articleList(searchedPageList)
+                .build();
     }
 }

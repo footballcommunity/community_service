@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
+import practice.communityservice.domain.model.enums.SearchType;
 import practice.communityservice.dto.GetPageListResponseDto;
 import practice.communityservice.dto.PostArticleRequestDto;
 import practice.communityservice.dto.PostArticleResponseDto;
@@ -24,6 +25,24 @@ public class BoardController {
                                                  @RequestParam(required = false, defaultValue = "10") int pageSize,
                                                  @RequestParam(required = false, defaultValue = "5") int blockSize){
         return boardService.getArticleList(page, pageSize, blockSize);
+    }
+
+    @GetMapping("/search")
+    public GetPageListResponseDto getSearchedPageList(@RequestParam SearchType searchType,
+                                    @RequestParam String keyword,
+                                    @RequestParam(required = false, defaultValue = "1") int page,
+                                    @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                    @RequestParam(required = false, defaultValue = "5") int blockSize){
+        return boardService.getSearchedPageList(page, pageSize, blockSize, searchType, keyword);
+    }
+    @GetMapping("/{categoryId}/search")
+    public GetPageListResponseDto getCategorySearchedPageList(@RequestParam SearchType searchType,
+                                    @RequestParam String keyword,
+                                    @RequestParam(required = false, defaultValue = "1") int page,
+                                    @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                    @RequestParam(required = false, defaultValue = "5") int blockSize,
+                                    @PathVariable long categoryId){
+        return boardService.getSearchedPageList(page, pageSize, blockSize, searchType, keyword);
     }
 
     @GetMapping("/{categoryId}")
