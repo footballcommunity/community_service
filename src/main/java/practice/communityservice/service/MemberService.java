@@ -45,7 +45,7 @@ private final MemberRepository memberRepository;
 
         User user = foundUser.get();
         return SigninResponseDto.builder()
-                .accessToken(jwtUtil.createAccessToken(user.getEmail(), user.getRole(), user.getStatus()))
+                .accessToken(jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus()))
                 .refreshToken(jwtUtil.createRefreshToken())
                 .build();
     }

@@ -1,14 +1,22 @@
 package practice.communityservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import practice.communityservice.domain.model.UserDetails;
 import practice.communityservice.dto.GetPageListRequestDto;
 import practice.communityservice.dto.GetPageListResponseDto;
+import practice.communityservice.dto.PostArticleRequestDto;
+import practice.communityservice.dto.PostArticleResponseDto;
 import practice.communityservice.service.BoardService;
+
+import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/board")
 @RequiredArgsConstructor
+@Slf4j
 public class BoardController {
 
     private final BoardService boardService;
@@ -28,4 +36,14 @@ public class BoardController {
                                                       @PathVariable Long categoryId){
         return boardService.getCategoryArticleList(page, pageSize, blockSize, categoryId);
     }
+
+    @PostMapping("/{categoryId}")
+    public PostArticleResponseDto postArticle(@RequestBody PostArticleRequestDto postArticleRequestDto,
+                                              @PathVariable Long categoryId){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long loginUserId = userDetails.getUserId();
+        log.debug("loginUserId={}",loginUserId);
+        return boardService.postArticle(postArticleRequestDto, categoryId, loginUserId);
+    }
+
 }

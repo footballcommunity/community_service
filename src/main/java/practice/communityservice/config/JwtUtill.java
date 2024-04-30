@@ -11,10 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import practice.communityservice.domain.exceptions.ErrorCode;
 import practice.communityservice.domain.exceptions.UnauthorizedException;
+import practice.communityservice.domain.model.UserDetails;
 import practice.communityservice.domain.model.enums.Role;
 import practice.communityservice.domain.model.enums.UserStatus;
 
 import java.security.Key;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +40,9 @@ public class JwtUtill {
     }
 
     // AccessToken 생성
-    public String createAccessToken(String userEmail, Role role, UserStatus status) {
+    public String createAccessToken(Long userId, String userEmail, Role role, UserStatus status) {
         Claims claims = Jwts.claims();
+        claims.put("userId", userId);
         claims.put("userEmail", userEmail);
         claims.put("role", role);
         claims.put("status", status);
@@ -83,7 +86,8 @@ public class JwtUtill {
     }
 
     public Authentication getAuthentication(String token) {
-        String id = Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody().getSubject();
-        return new UsernamePasswordAuthenticationToken(id, null, new ArrayList<>());
+        Claims claims = Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
+        UserDetails userDetails = new UserDetails(Long.valueOf((int)claims.get("userId")), (String) claims.get("email"), Role.valueOf((String) claims.get("role")), UserStatus.valueOf((String) claims.get("status")));
+        return new UsernamePasswordAuthenticationToken(userDetails,null, new ArrayList<>());
     }
 }

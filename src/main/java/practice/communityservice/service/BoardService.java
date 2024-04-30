@@ -1,17 +1,23 @@
 package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import practice.communityservice.config.JwtUtill;
 import practice.communityservice.domain.model.Article;
+import practice.communityservice.domain.validation.AuthorUserMatchValidator;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.domain.validation.ValueNotZeroValidator;
 import practice.communityservice.dto.GetPageListResponseDto;
+import practice.communityservice.dto.PostArticleRequestDto;
+import practice.communityservice.dto.PostArticleResponseDto;
 import practice.communityservice.repository.BoardRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -65,5 +71,19 @@ public class BoardService {
                 .startPage(startPage)
                 .endPage(endPage)
                 .build();
+    }
+
+    public PostArticleResponseDto postArticle(PostArticleRequestDto postArticleRequestDto, Long categoryId, Long userId) {
+        log.debug("userId={}",userId);
+        Long authorId = postArticleRequestDto.getAuthorId();
+        String title = postArticleRequestDto.getTitle();
+        String content = postArticleRequestDto.getContent();
+        Long postId = boardRepository.postArticle(authorId, categoryId, title, content);
+        //Validation
+        ValidatorBucket validatorBucket = ValidatorBucket.of()
+                .consistOf(new AuthorUserMatchValidator(userId, authorId));
+        validatorBucket.validate();
+
+        return new PostArticleResponseDto(postId);
     }
 }

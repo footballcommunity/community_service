@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import practice.communityservice.domain.model.Article;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class BoardRepository {
@@ -67,5 +70,16 @@ public class BoardRepository {
     public int categoryBoardCount(Long categoryId) {
         String sql = "SELECT COUNT(id) AS cnt FROM article WHERE category_id = ?;";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");}, categoryId);
+    }
+
+    public long postArticle(Long author_id, Long category_id, String title, String content) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("author_id", author_id);
+        map.put("category_id", category_id);
+        map.put("title", title);
+        map.put("content", content);
+        Number key = simpleJdbcInsert.withTableName("article").usingGeneratedKeyColumns("id","view_count", "date_created", "date_updated").executeAndReturnKey(map);
+        return key.longValue();
     }
 }
