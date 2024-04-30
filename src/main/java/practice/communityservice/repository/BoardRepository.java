@@ -131,4 +131,58 @@ public class BoardRepository {
                 "WHERE content LIKE CONCAT('%',?,'%');";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");},keyword);
     }
+
+    public List<Article> getPageByCategoryAndTitle(int page, int pageSize, Long categoryId, String title) {
+        int pageStart = (page-1) * pageSize;
+        String sql = "SELECT a.id AS id, u.username AS author_name, c.name AS category_name, a.title AS title, a.content AS content, a.view_count AS view_count, a.date_created AS date_created, a.date_updated AS date_updated " +
+                "FROM article AS a\n" +
+                "JOIN category AS c ON c.id = a.category_id\n" +
+                "JOIN user AS u ON a.author_id = u.id\n" +
+                "WHERE c.id = ? AND a.title LIKE CONCAT('%',?,'%')\n" +
+                "ORDER BY a.date_created DESC LIMIT ?,?;";
+        return jdbcTemplate.query(sql,articleRowMapper(), categoryId, title, pageStart, pageSize);
+    }
+    public int getPageCountByCategoryAndTitle(Long categoryId, String keyword) {
+        String sql = "SELECT COUNT(id) AS cnt FROM article\n" +
+                "JOIN category AS c ON c.id = a.category_id\n" +
+                "WHERE c.id = ? AND a.title LIKE CONCAT('%',?,'%');";
+        return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");}, categoryId, keyword);
+    }
+
+    public List<Article> getPageByCategoryAndAuthor(int page, int pageSize, Long categoryId, String username) {
+        int pageStart = (page-1) * pageSize;
+        String sql = "SELECT a.id AS id, u.username AS author_name, c.name AS category_name, a.title AS title, a.content AS content, a.view_count AS view_count, a.date_created AS date_created, a.date_updated AS date_updated " +
+                "FROM article AS a\n" +
+                "JOIN category AS c ON c.id = a.category_id\n" +
+                "JOIN user AS u ON a.author_id = u.id\n" +
+                "WHERE c.id = ? AND u.username LIKE CONCAT('%',?,'%')\n" +
+                "ORDER BY a.date_created DESC LIMIT ?,?;";
+        return jdbcTemplate.query(sql,articleRowMapper(), categoryId, username, pageStart, pageSize);
+    }
+    public int getPageCountByCategoryAndAuthor(Long categoryId, String keyword) {
+        String sql = "SELECT COUNT(id) AS cnt FROM article a\n" +
+                "JOIN user u ON u.id = a.author_id\n" +
+                "JOIN category AS c ON c.id = a.category_id\n" +
+                "WHERE c.id = ? AND u.username LIKE CONCAT('%',?,'%');";
+        return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");},categoryId,keyword);
+    }
+
+    public List<Article> getPageByCategoryAndContent(int page, int pageSize, Long categoryId, String contentKey) {
+        int pageStart = (page-1) * pageSize;
+        String sql = "SELECT a.id AS id, u.username AS author_name, c.name AS category_name, a.title AS title, a.content AS content, a.view_count AS view_count, a.date_created AS date_created, a.date_updated AS date_updated " +
+                "FROM article AS a\n" +
+                "JOIN category AS c ON c.id = a.category_id\n" +
+                "JOIN user AS u ON a.author_id = u.id\n" +
+                "WHERE c.id = ? AND a.content LIKE CONCAT('%',?,'%')\n" +
+                "ORDER BY a.date_created DESC LIMIT ?,?;";
+        return jdbcTemplate.query(sql,articleRowMapper(), categoryId, contentKey, pageStart, pageSize);
+
+    }
+    public int getPageCountByCategoryAndContent(Long categoryId, String keyword) {
+        String sql = "SELECT COUNT(id) AS cnt FROM article\n" +
+                "JOIN category AS c ON c.id = a.category_id\n" +
+                "WHERE c.id = ? AND content LIKE CONCAT('%',?,'%');";
+        return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");}, categoryId, keyword);
+    }
+
 }

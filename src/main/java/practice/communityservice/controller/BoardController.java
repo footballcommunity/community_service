@@ -42,7 +42,7 @@ public class BoardController {
                                     @RequestParam(required = false, defaultValue = "10") int pageSize,
                                     @RequestParam(required = false, defaultValue = "5") int blockSize,
                                     @PathVariable long categoryId){
-        return boardService.getSearchedPageList(page, pageSize, blockSize, searchType, keyword);
+        return boardService.getCategorySearchedPageList(page, pageSize, blockSize, categoryId, searchType, keyword);
     }
 
     @GetMapping("/{categoryId}")

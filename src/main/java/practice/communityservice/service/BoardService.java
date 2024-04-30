@@ -96,11 +96,36 @@ public class BoardService {
             }
             case AUTHOR -> {
                 searchedPageList = boardRepository.getPageByAuthor(page, pageSize, keyword);
-                totalCount = boardRepository.getPageCountByTitle(keyword);
+                totalCount = boardRepository.getPageCountByAuthor(keyword);
             }
             case CONTENT -> {
                 searchedPageList=boardRepository.getPageByContent(page, pageSize, keyword);
                 totalCount = boardRepository.getPageCountByContent(keyword);
+            }
+        }
+        PageDto pageDto = new PageDto(totalCount, pageSize, blockSize, page);
+        return GetPageListResponseDto.builder()
+                .page(pageDto)
+                .articleList(searchedPageList)
+                .build();
+    }
+
+    public GetPageListResponseDto getCategorySearchedPageList(int page, int pageSize, int blockSize, Long categoryId, SearchType searchType, String keyword) {
+        List<Article> searchedPageList = new ArrayList<>();
+        int totalCount = 0;
+        // searchTyp 1.제목 2.작성자 3.내용
+        switch (searchType){
+            case TITLE -> {
+                searchedPageList = boardRepository.getPageByCategoryAndTitle(page, pageSize, categoryId, keyword);
+                totalCount = boardRepository.getPageCountByCategoryAndTitle(categoryId, keyword);
+            }
+            case AUTHOR -> {
+                searchedPageList = boardRepository.getPageByCategoryAndAuthor(page, pageSize, categoryId, keyword);
+                totalCount = boardRepository.getPageCountByCategoryAndAuthor(categoryId, keyword);
+            }
+            case CONTENT -> {
+                searchedPageList=boardRepository.getPageByCategoryAndContent(page, pageSize, categoryId, keyword);
+                totalCount = boardRepository.getPageCountByCategoryAndContent(categoryId, keyword);
             }
         }
         PageDto pageDto = new PageDto(totalCount, pageSize, blockSize, page);
