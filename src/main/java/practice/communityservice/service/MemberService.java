@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
+private final MemberRepository memberRepository;
     private final JwtUtill jwtUtil;
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         String email = signupRequestDto.getEmail();
@@ -35,8 +35,9 @@ public class MemberService {
     public SigninResponseDto signin(SigninRequestDto signinRequestDto) {
         String email = signinRequestDto.getEmail();
         String password = signinRequestDto.getPassword();
+        // DB 조회
         Optional<User> foundUser = memberRepository.findByEmail(email);
-
+        // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()
                 .consistOf(new EmailExistValidator(foundUser))
                 .consistOf(new EmailPasswordMatchValidator(foundUser, password));

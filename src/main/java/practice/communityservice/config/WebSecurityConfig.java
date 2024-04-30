@@ -36,7 +36,9 @@ public class WebSecurityConfig{
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
                         "/members/signin",
-                        "/members/signup").permitAll()
+                        "/members/signup",
+                        "/**"
+                ).permitAll()
                 .anyRequest().authenticated()
         );
         // Jwt Execptionhandling
