@@ -1,21 +1,23 @@
-package practice.communityservice.domain.model;
+package practice.communityservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 
-@Getter @Setter
-@AllArgsConstructor
-public class Article {
+@Getter
+@NoArgsConstructor
+@Setter
+public class ArticleDto {
     private Long articleId;
     private String authorName;
     private String categoryName;
     private String title;
     private String content;
     private int viewCount;
-    private LocalDateTime dateCreated;
-    private LocalDateTime dateUpdated;
+    private Date dateCreated;
+    private Date dateUpdated;
 }

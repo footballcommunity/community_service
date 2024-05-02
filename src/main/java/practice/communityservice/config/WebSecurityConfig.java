@@ -36,8 +36,8 @@ public class WebSecurityConfig{
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
                         "/members/signin",
-                        "/members/signup"
-//                        "/**"
+                        "/members/signup",
+                        "/**"
                 ).permitAll()
                 .anyRequest().authenticated()
         );

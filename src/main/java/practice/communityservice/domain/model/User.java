@@ -7,7 +7,6 @@ import practice.communityservice.domain.model.enums.Role;
 import practice.communityservice.domain.model.enums.UserStatus;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter @Setter
 @AllArgsConstructor

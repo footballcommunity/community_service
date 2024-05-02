@@ -2,17 +2,13 @@ package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import practice.communityservice.domain.model.Article;
+import practice.communityservice.domain.model.Page;
 import practice.communityservice.domain.model.enums.SearchType;
 import practice.communityservice.domain.validation.AuthorUserMatchValidator;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.domain.validation.ValueNotZeroValidator;
-import practice.communityservice.dto.GetPageListResponseDto;
-import practice.communityservice.dto.PageDto;
-import practice.communityservice.dto.PostArticleRequestDto;
-import practice.communityservice.dto.PostArticleResponseDto;
+import practice.communityservice.dto.*;
 import practice.communityservice.repository.BoardRepository;
 
 import java.util.ArrayList;
@@ -27,7 +23,7 @@ public class BoardService {
 
     public GetPageListResponseDto getArticleList(int page, int pageSize, int blockSize){
         // DB
-        List<Article> articleList = boardRepository.getPageArticleList(page, pageSize);
+        List<Page> pageList = boardRepository.getPageArticleList(page, pageSize);
         int articleCount = boardRepository.allBoardCount();
         // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()
@@ -44,12 +40,12 @@ public class BoardService {
         PageDto pageDto = new PageDto(articleCount, pageSize, blockSize, page);
         return GetPageListResponseDto.builder()
                 .page(pageDto)
-                .articleList(articleList)
+                .pageList(pageList)
                 .build();
     }
 
     public GetPageListResponseDto getCategoryArticleList(int page, int pageSize, int blockSize, Long categoryId) {
-        List<Article> categoryArticleList = boardRepository.getPageCategoryArticleList(page, pageSize, categoryId);
+        List<Page> categoryPageList = boardRepository.getPageCategoryArticleList(page, pageSize, categoryId);
         int categoryArticleCount = boardRepository.categoryBoardCount(categoryId);
         // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()
@@ -67,26 +63,12 @@ public class BoardService {
         PageDto pageDto = new PageDto(categoryArticleCount, pageSize, blockSize, page);
         return GetPageListResponseDto.builder()
                 .page(pageDto)
-                .articleList(categoryArticleList)
+                .pageList(categoryPageList)
                 .build();
     }
 
-    public PostArticleResponseDto postArticle(PostArticleRequestDto postArticleRequestDto, Long categoryId, Long userId) {
-        log.debug("userId={}",userId);
-        Long authorId = postArticleRequestDto.getAuthorId();
-        String title = postArticleRequestDto.getTitle();
-        String content = postArticleRequestDto.getContent();
-        Long postId = boardRepository.postArticle(authorId, categoryId, title, content);
-        //Validation
-        ValidatorBucket validatorBucket = ValidatorBucket.of()
-                .consistOf(new AuthorUserMatchValidator(userId, authorId));
-        validatorBucket.validate();
-
-        return new PostArticleResponseDto(postId);
-    }
-
     public GetPageListResponseDto getSearchedPageList(int page, int pageSize, int blockSize, SearchType searchType, String keyword) {
-        List<Article> searchedPageList = new ArrayList<>();
+        List<Page> searchedPageList = new ArrayList<>();
         int totalCount = 0;
         // searchTyp 1.제목 2.작성자 3.내용
         switch (searchType){
@@ -106,12 +88,12 @@ public class BoardService {
         PageDto pageDto = new PageDto(totalCount, pageSize, blockSize, page);
         return GetPageListResponseDto.builder()
                 .page(pageDto)
-                .articleList(searchedPageList)
+                .pageList(searchedPageList)
                 .build();
     }
 
     public GetPageListResponseDto getCategorySearchedPageList(int page, int pageSize, int blockSize, Long categoryId, SearchType searchType, String keyword) {
-        List<Article> searchedPageList = new ArrayList<>();
+        List<Page> searchedPageList = new ArrayList<>();
         int totalCount = 0;
         // searchTyp 1.제목 2.작성자 3.내용
         switch (searchType){
@@ -131,7 +113,9 @@ public class BoardService {
         PageDto pageDto = new PageDto(totalCount, pageSize, blockSize, page);
         return GetPageListResponseDto.builder()
                 .page(pageDto)
-                .articleList(searchedPageList)
+                .pageList(searchedPageList)
                 .build();
     }
+
+
 }

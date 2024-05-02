@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
 import practice.communityservice.domain.model.enums.SearchType;
+import practice.communityservice.dto.GetArticleResponseDto;
 import practice.communityservice.dto.GetPageListResponseDto;
 import practice.communityservice.dto.PostArticleRequestDto;
 import practice.communityservice.dto.PostArticleResponseDto;
@@ -53,13 +54,5 @@ public class BoardController {
         return boardService.getCategoryArticleList(page, pageSize, blockSize, categoryId);
     }
 
-    @PostMapping("/{categoryId}")
-    public PostArticleResponseDto postArticle(@RequestBody PostArticleRequestDto postArticleRequestDto,
-                                              @PathVariable Long categoryId){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long loginUserId = userDetails.getUserId();
-        log.debug("loginUserId={}",loginUserId);
-        return boardService.postArticle(postArticleRequestDto, categoryId, loginUserId);
-    }
 
 }
