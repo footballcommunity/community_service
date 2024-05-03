@@ -8,8 +8,6 @@ on:
 
 jobs:
   # 자바 빌드 
-
-
   build-docker-image:
       runs-on: ubuntu-latest
       steps:
@@ -23,6 +21,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      # 1-1. Application Properties 세팅
+      - name: make application-prod.properties
+        run: |
+            mkdir ./src/main/resources
+            cd ./src/main/resources
+            touch ./application.properties
+            echo "${{ secrets.APPLICATION_PROPERTIES_DEV }}" > ./application.properties
+        shell: bash
+      
       # 2. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
@@ -43,3 +50,24 @@ jobs:
       # 5. Docker Hub 이미지 푸시
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/community_service_backend
+
+  # 푸시한 이미지를 ec2에서 풀 & 실행 
+  run-docker-image-on-ec2:
+    needs: build-docker-image
+    runs-on: self-hosted
+    steps:
+      # 1. 이미지 풀
+      - name: docker pull
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/community_service_backend
+      
+      # 2. 기존의 컨테이너를 중지
+      - name: docker stop container
+        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+
+      # 3. 최신 이미지를 실행시킵니다
+      - name: docker run new container
+        run: sudo docker run --name github-actions-demo --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/community_service_backend
+
+      # 4. 미사용 이미지를 정리
+      - name: delete old docker image
+        run: sudo docker system prune -f
