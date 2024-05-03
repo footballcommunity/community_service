@@ -8,8 +8,6 @@ on:
 
 jobs:
   # 자바 빌드 
-
-
   build-docker-image:
       runs-on: ubuntu-latest
       steps:
@@ -23,6 +21,14 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      # 1-1. Application Properties 세팅
+      - name: make application-prod.properties
+        run: |
+            cd ./src/main/resources
+            touch ./application.properties
+            echo "${{ secrets.APPLICATION_PROPERTIES_DEV }}" > ./application.properties
+        shell: bash
+      
       # 2. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
