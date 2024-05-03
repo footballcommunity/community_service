@@ -24,6 +24,7 @@ jobs:
       # 1-1. Application Properties 세팅
       - name: make application-prod.properties
         run: |
+            mkdir ./src/main/resources
             cd ./src/main/resources
             touch ./application.properties
             echo "${{ secrets.APPLICATION_PROPERTIES_DEV }}" > ./application.properties
