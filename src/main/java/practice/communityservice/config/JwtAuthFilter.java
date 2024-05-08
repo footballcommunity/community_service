@@ -22,6 +22,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = this.jwtUtill.resolveToken((HttpServletRequest) request);
+        log.debug("currnet token : " + token);
         if(token != null && this.jwtUtill.validateToken(token)){
             Authentication auth = this.jwtUtill.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);

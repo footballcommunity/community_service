@@ -75,7 +75,7 @@ public class JwtUtill {
             Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | IllegalArgumentException | MalformedJwtException e ) {
-            log.debug("validate Token catch error : {}",e);
+                log.debug("validate Token catch error : "+e);
             throw new UnauthorizedException(ErrorCode.INVALID_JWT, "유효하지 않은 토큰입니다.");
         } catch (ExpiredJwtException e){
             throw new UnauthorizedException(ErrorCode.INVALID_JWT, "만료된 토큰입니다.");

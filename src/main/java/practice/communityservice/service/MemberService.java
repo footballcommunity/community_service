@@ -1,6 +1,7 @@
 package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import practice.communityservice.config.JwtUtill;
 import practice.communityservice.domain.model.User;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 private final MemberRepository memberRepository;
     private final JwtUtill jwtUtil;
@@ -45,6 +47,7 @@ private final MemberRepository memberRepository;
     }
 
     public UserInfoResponseDto getUserInfo(String email) {
+        log.debug("login user email : " + email);
         //DB 조회
         Optional<User> foundUser = memberRepository.findByEmail(email);
         // Validation
