@@ -4,14 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import practice.communityservice.config.JwtUtill;
 import practice.communityservice.domain.model.User;
-import practice.communityservice.domain.validation.DuplicatedEmailValidator;
-import practice.communityservice.domain.validation.EmailExistValidator;
-import practice.communityservice.domain.validation.EmailPasswordMatchValidator;
-import practice.communityservice.domain.validation.ValidatorBucket;
-import practice.communityservice.dto.SigninRequestDto;
-import practice.communityservice.dto.SigninResponseDto;
-import practice.communityservice.dto.SignupRequestDto;
-import practice.communityservice.dto.SignupResponseDto;
+import practice.communityservice.domain.validation.*;
+import practice.communityservice.dto.*;
 import practice.communityservice.repository.MemberRepository;
 
 import java.util.Optional;
@@ -48,5 +42,18 @@ private final MemberRepository memberRepository;
                 .accessToken(jwtUtil.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus()))
                 .refreshToken(jwtUtil.createRefreshToken())
                 .build();
+    }
+
+    public UserInfoResponseDto getUserInfo(String email) {
+        //DB 조회
+        Optional<User> foundUser = memberRepository.findByEmail(email);
+        // Validation
+        ValidatorBucket validatorBucket = ValidatorBucket.of()
+                .consistOf(new ObjectNotNullValidator(foundUser))
+                .consistOf(new EmailExistValidator(foundUser));
+        validatorBucket.validate();
+
+        User user = foundUser.get();
+        return UserInfoResponseDto.from(user);
     }
 }
