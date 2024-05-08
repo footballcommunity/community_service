@@ -43,7 +43,7 @@ public class JwtUtill {
     public String createAccessToken(Long userId, String userEmail, Role role, UserStatus status) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
-        claims.put("userEmail", userEmail);
+        claims.put("email", userEmail);
         claims.put("role", role);
         claims.put("status", status);
 
@@ -88,6 +88,7 @@ public class JwtUtill {
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
+        log.debug("user details : " + claims.get("email"));
         UserDetails userDetails = new UserDetails(Long.valueOf((int)claims.get("userId")), (String) claims.get("email"), Role.valueOf((String) claims.get("role")), UserStatus.valueOf((String) claims.get("status")));
         return new UsernamePasswordAuthenticationToken(userDetails,null, new ArrayList<>());
     }
