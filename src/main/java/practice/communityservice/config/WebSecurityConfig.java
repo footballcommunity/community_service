@@ -37,7 +37,7 @@ public class WebSecurityConfig{
                 .requestMatchers(
                         "/members/signin",
                         "/members/signup",
-                        "/**"
+                        "/board/**"
                 ).permitAll()
                 .anyRequest().authenticated()
         );
