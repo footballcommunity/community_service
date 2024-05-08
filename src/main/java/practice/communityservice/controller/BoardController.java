@@ -1,15 +1,11 @@
 package practice.communityservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import practice.communityservice.domain.model.UserDetails;
+import lombok.extern.slf4j.Slf4j;
 import practice.communityservice.domain.model.enums.SearchType;
-import practice.communityservice.dto.GetArticleResponseDto;
+
 import practice.communityservice.dto.GetPageListResponseDto;
-import practice.communityservice.dto.PostArticleRequestDto;
-import practice.communityservice.dto.PostArticleResponseDto;
 import practice.communityservice.service.BoardService;
 
 @RestController
@@ -46,13 +42,11 @@ public class BoardController {
         return boardService.getCategorySearchedPageList(page, pageSize, blockSize, categoryId, searchType, keyword);
     }
 
-    @GetMapping("/{categoryId}")
+        @GetMapping("/{categoryId}")
     public GetPageListResponseDto getCategoryPageList(@RequestParam(required = false, defaultValue = "1") int page,
                                                       @RequestParam(required = false, defaultValue = "10") int pageSize,
                                                       @RequestParam(required = false, defaultValue = "5") int blockSize,
                                                       @PathVariable Long categoryId){
         return boardService.getCategoryArticleList(page, pageSize, blockSize, categoryId);
     }
-
-
 }
