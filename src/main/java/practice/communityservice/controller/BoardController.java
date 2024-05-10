@@ -25,7 +25,7 @@ public class BoardController {
     }
 
     @GetMapping("/search")
-    public GetPageListResponseDto getSearchedPageList(@RequestParam SearchType searchType,
+    public GetPageListResponseDto getSearchedPageList(@RequestParam String searchType,
                                     @RequestParam String keyword,
                                     @RequestParam(required = false, defaultValue = "1") int page,
                                     @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -40,7 +40,7 @@ public class BoardController {
                                     @RequestParam(required = false, defaultValue = "5") int blockSize,
                                     @PathVariable long categoryId){
 
-        return boardService.getCategorySearchedPageList(page, pageSize, blockSize, categoryId, SearchType.valueOf(searchType), keyword);
+        return boardService.getCategorySearchedPageList(page, pageSize, blockSize, categoryId, searchType, keyword);
     }
 
     @GetMapping("/{categoryId}")

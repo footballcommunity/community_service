@@ -67,11 +67,11 @@ public class BoardService {
                 .build();
     }
 
-    public GetPageListResponseDto getSearchedPageList(int page, int pageSize, int blockSize, SearchType searchType, String keyword) {
+    public GetPageListResponseDto getSearchedPageList(int page, int pageSize, int blockSize, String searchType, String keyword) {
         List<Page> searchedPageList = new ArrayList<>();
         int totalCount = 0;
         // searchTyp 1.제목 2.작성자 3.내용
-        switch (searchType){
+        switch (SearchType.valueOf(searchType)){
             case TITLE -> {
                 searchedPageList = boardRepository.getPageByTitle(page, pageSize, keyword);
                 totalCount = boardRepository.getPageCountByTitle(keyword);
@@ -92,11 +92,11 @@ public class BoardService {
                 .build();
     }
 
-    public GetPageListResponseDto getCategorySearchedPageList(int page, int pageSize, int blockSize, Long categoryId, SearchType searchType, String keyword) {
+    public GetPageListResponseDto getCategorySearchedPageList(int page, int pageSize, int blockSize, Long categoryId, String searchType, String keyword) {
         List<Page> searchedPageList = new ArrayList<>();
         int totalCount = 0;
         // searchTyp 1.제목 2.작성자 3.내용
-        switch (searchType){
+        switch (SearchType.valueOf(searchType)){
             case TITLE -> {
                 searchedPageList = boardRepository.getPageByCategoryAndTitle(page, pageSize, categoryId, keyword);
                 totalCount = boardRepository.getPageCountByCategoryAndTitle(categoryId, keyword);
