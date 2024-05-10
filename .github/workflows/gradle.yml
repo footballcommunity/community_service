@@ -3,8 +3,6 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   # 자바 빌드 
@@ -62,11 +60,11 @@ jobs:
       
       # 2. 기존의 컨테이너를 중지
       - name: docker stop container
-        run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
+        run: sudo docker stop community_service_backend 2>/dev/null || true
 
       # 3. 최신 이미지를 실행시킵니다
       - name: docker run new container
-        run: sudo docker run --name community_service --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/community_service_backend
+        run: sudo docker run --name community_service_backend --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/community_service_backend
 
       # 4. 미사용 이미지를 정리
       - name: delete old docker image
