@@ -32,7 +32,7 @@ public class BoardRepository {
                     rs.getLong("id"),
                     rs.getString("author_name"),
                     rs.getString("category_name"),
-                    rs.getString("title"),
+                    rs.getString(   "title"),
                     rs.getInt("view_count"),
                     (LocalDateTime) rs.getObject("date_created"),
                     (LocalDateTime) rs.getObject("date_updated")
@@ -98,7 +98,7 @@ public class BoardRepository {
         return jdbcTemplate.query(sql, pageRowMapper(), username, pageStart, pageSize);
     }
     public int getPageCountByAuthor(String keyword) {
-        String sql = "SELECT COUNT(id) AS cnt FROM article AS a\n" +
+        String sql = "SELECT COUNT(a.id) AS cnt FROM article AS a\n" +
                 "JOIN user u ON u.id = a.author_id\n" +
                 "WHERE u.username LIKE CONCAT('%',?,'%');";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");},keyword);
@@ -116,7 +116,7 @@ public class BoardRepository {
 
     }
     public int getPageCountByContent(String keyword) {
-        String sql = "SELECT COUNT(id) AS cnt FROM article AS a\n" +
+        String sql = "SELECT COUNT(a.id) AS cnt FROM article AS a\n" +
                 "WHERE content LIKE CONCAT('%',?,'%');";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");},keyword);
     }
@@ -132,7 +132,7 @@ public class BoardRepository {
         return jdbcTemplate.query(sql, pageRowMapper(), categoryId, title, pageStart, pageSize);
     }
     public int getPageCountByCategoryAndTitle(Long categoryId, String keyword) {
-        String sql = "SELECT COUNT(id) AS cnt FROM article AS a\n" +
+        String sql = "SELECT COUNT(a.id) AS cnt FROM article AS a\n" +
                 "JOIN category AS c ON c.id = a.category_id\n" +
                 "WHERE c.id = ? AND a.title LIKE CONCAT('%',?,'%');";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");}, categoryId, keyword);
@@ -149,7 +149,7 @@ public class BoardRepository {
         return jdbcTemplate.query(sql, pageRowMapper(), categoryId, username, pageStart, pageSize);
     }
     public int getPageCountByCategoryAndAuthor(Long categoryId, String keyword) {
-        String sql = "SELECT COUNT(id) AS cnt FROM article AS a\n" +
+        String sql = "SELECT COUNT(a.id) AS cnt FROM article AS a\n" +
                 "JOIN user u ON u.id = a.author_id\n" +
                 "JOIN category AS c ON c.id = a.category_id\n" +
                 "WHERE c.id = ? AND u.username LIKE CONCAT('%',?,'%');";
@@ -168,7 +168,7 @@ public class BoardRepository {
 
     }
     public int getPageCountByCategoryAndContent(Long categoryId, String keyword) {
-        String sql = "SELECT COUNT(id) AS cnt FROM article AS a\n" +
+        String sql = "SELECT COUNT(a.id) AS cnt FROM article AS a\n" +
                 "JOIN category AS c ON c.id = a.category_id\n" +
                 "WHERE c.id = ? AND content LIKE CONCAT('%',?,'%');";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");}, categoryId, keyword);
