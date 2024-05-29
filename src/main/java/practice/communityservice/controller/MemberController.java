@@ -2,13 +2,14 @@ package practice.communityservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
-import practice.communityservice.domain.validation.ValidatorBucket;
-import practice.communityservice.dto.*;
+import practice.communityservice.dto.request.SigninRequestDto;
+import practice.communityservice.dto.request.SignupRequestDto;
+import practice.communityservice.dto.response.SigninResponseDto;
+import practice.communityservice.dto.response.SignupResponseDto;
+import practice.communityservice.dto.response.UserInfoResponseDto;
 import practice.communityservice.service.MemberService;
 
 @RestController

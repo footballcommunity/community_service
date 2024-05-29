@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
-import practice.communityservice.dto.GetArticleResponseDto;
-import practice.communityservice.dto.PostArticleRequestDto;
-import practice.communityservice.dto.PostArticleResponseDto;
+import practice.communityservice.dto.response.GetArticleResponseDto;
+import practice.communityservice.dto.request.PostArticleRequestDto;
+import practice.communityservice.dto.response.PostArticleResponseDto;
 import practice.communityservice.service.ArticleService;
 
 @RestController

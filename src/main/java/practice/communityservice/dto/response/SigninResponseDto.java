@@ -1,4 +1,4 @@
-package practice.communityservice.dto;
+package practice.communityservice.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service;
 import practice.communityservice.config.JwtUtill;
 import practice.communityservice.domain.model.User;
 import practice.communityservice.domain.validation.*;
-import practice.communityservice.dto.*;
+import practice.communityservice.dto.request.SigninRequestDto;
+import practice.communityservice.dto.request.SignupRequestDto;
+import practice.communityservice.dto.response.SigninResponseDto;
+import practice.communityservice.dto.response.SignupResponseDto;
+import practice.communityservice.dto.response.UserInfoResponseDto;
 import practice.communityservice.repository.MemberRepository;
 
 import java.util.Optional;

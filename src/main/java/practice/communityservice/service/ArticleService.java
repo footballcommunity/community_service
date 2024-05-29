@@ -7,6 +7,9 @@ import practice.communityservice.domain.validation.AuthorUserMatchValidator;
 import practice.communityservice.domain.validation.ObjectNotNullValidator;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.dto.*;
+import practice.communityservice.dto.request.PostArticleRequestDto;
+import practice.communityservice.dto.response.GetArticleResponseDto;
+import practice.communityservice.dto.response.PostArticleResponseDto;
 import practice.communityservice.repository.ArticleRepository;
 import practice.communityservice.repository.CommentRepository;
 

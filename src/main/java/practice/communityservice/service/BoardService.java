@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import practice.communityservice.domain.model.Page;
 import practice.communityservice.domain.model.enums.SearchType;
-import practice.communityservice.domain.validation.AuthorUserMatchValidator;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.domain.validation.ValueNotZeroValidator;
 import practice.communityservice.dto.*;
+import practice.communityservice.dto.response.GetPageListResponseDto;
 import practice.communityservice.repository.BoardRepository;
 
 import java.util.ArrayList;

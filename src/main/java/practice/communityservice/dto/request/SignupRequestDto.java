@@ -1,4 +1,4 @@
-package practice.communityservice.dto;
+package practice.communityservice.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

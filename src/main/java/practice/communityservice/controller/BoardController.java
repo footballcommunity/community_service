@@ -3,9 +3,8 @@ package practice.communityservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
-import practice.communityservice.domain.model.enums.SearchType;
 
-import practice.communityservice.dto.GetPageListResponseDto;
+import practice.communityservice.dto.response.GetPageListResponseDto;
 import practice.communityservice.service.BoardService;
 
 @RestController

@@ -1,4 +1,4 @@
-package practice.communityservice.dto;
+package practice.communityservice.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,6 @@ import practice.communityservice.domain.model.enums.Role;
 import practice.communityservice.domain.model.enums.UserStatus;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Builder
 @Getter

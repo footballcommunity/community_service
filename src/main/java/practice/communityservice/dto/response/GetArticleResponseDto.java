@@ -1,8 +1,10 @@
-package practice.communityservice.dto;
+package practice.communityservice.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
 import practice.communityservice.domain.model.Comment;
+import practice.communityservice.dto.ArticleDto;
+
 import java.util.List;
 
 @Getter

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import practice.communityservice.domain.model.User;
 import practice.communityservice.domain.model.enums.Role;
 import practice.communityservice.domain.model.enums.UserStatus;
-import practice.communityservice.dto.SignupRequestDto;
+import practice.communityservice.dto.request.SignupRequestDto;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
@@ -29,7 +29,6 @@ public class MemberRepository {
     public MemberRepository(DataSource dataSource){
         jdbcTemplate = new JdbcTemplate(dataSource);
         objectMapper = new ObjectMapper();
-
     }
 
     private RowMapper<User> userRowMapper() {
@@ -54,7 +53,7 @@ public class MemberRepository {
         return key.longValue();
     }
 
-    public Optional<User> findByEmail(String srcEmail) {
+public Optional<User> findByEmail(String srcEmail) {
         String sql = "SELECT * FROM user WHERE email = ?";
         List<User> userList = jdbcTemplate.query(sql, userRowMapper(),srcEmail);
         return userList.stream().findAny();
