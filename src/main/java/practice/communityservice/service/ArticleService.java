@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import practice.communityservice.domain.model.Comment;
 import practice.communityservice.domain.validation.AuthorUserMatchValidator;
+import practice.communityservice.domain.validation.EffectedRowsValidator;
 import practice.communityservice.domain.validation.ObjectNotNullValidator;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.dto.*;
 import practice.communityservice.dto.request.PostArticleRequestDto;
+import practice.communityservice.dto.request.UpdateViewCountRequestDto;
 import practice.communityservice.dto.response.GetArticleResponseDto;
 import practice.communityservice.dto.response.PostArticleResponseDto;
 import practice.communityservice.repository.ArticleRepository;
@@ -63,8 +65,14 @@ public class ArticleService {
         return new PostArticleResponseDto(postId);
     }
     // 게시물 조회 수
-    public void updateViewCount(long articleId){
+    public void updateViewCount(UpdateViewCountRequestDto updateViewCountRequestDto){
 
+        Long articleId = updateViewCountRequestDto.getArticleId();
+        int viewCount = updateViewCountRequestDto.getViewCount();
+        int rowsEffected = articleRepository.updateViewCount(articleId, viewCount);
+
+        ValidatorBucket validatorBucket = ValidatorBucket.of()
+                .consistOf(new EffectedRowsValidator(1,rowsEffected));
     }
     // 게시물 좋아요
     public void postGoodArticle(long userId, long articleId){

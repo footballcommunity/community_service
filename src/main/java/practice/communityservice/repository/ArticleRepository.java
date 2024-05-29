@@ -39,4 +39,10 @@ public class ArticleRepository {
         Number key = simpleJdbcInsert.withTableName("article").usingGeneratedKeyColumns("id","view_count", "date_created", "date_updated").executeAndReturnKey(map);
         return key.longValue();
     }
+
+    public int updateViewCount(Long articleId, int viewCount){
+        String sql = "UPDATE article as a set view_count = ?" +
+                "WHERE a.id = ?";
+        return this.jdbcTemplate.update(sql, viewCount, articleId);
+    }
 }

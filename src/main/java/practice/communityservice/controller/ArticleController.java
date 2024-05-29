@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
+import practice.communityservice.dto.request.UpdateViewCountRequestDto;
 import practice.communityservice.dto.response.GetArticleResponseDto;
 import practice.communityservice.dto.request.PostArticleRequestDto;
 import practice.communityservice.dto.response.PostArticleResponseDto;
+import practice.communityservice.dto.response.UpdateViewCountResponseDto;
 import practice.communityservice.service.ArticleService;
 
 @RestController
@@ -28,5 +30,11 @@ public class ArticleController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long loginUserId = userDetails.getUserId();
         return articleService.postArticle(postArticleRequestDto, categoryId, loginUserId);
+    }
+
+    @PatchMapping("/view")
+    public UpdateViewCountResponseDto updateViweCountResponseDto(@RequestBody UpdateViewCountRequestDto updateViewCountRequestDto){
+        articleService.updateViewCount(updateViewCountRequestDto);
+        return new UpdateViewCountResponseDto(updateViewCountRequestDto.getViewCount());
     }
 }
