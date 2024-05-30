@@ -7,5 +7,5 @@ import practice.communityservice.dto.request.UpdateViewCountRequestDto;
 @Getter
 @AllArgsConstructor
 public class UpdateViewCountResponseDto {
-    private int viewCount;
+    private String message;
 }

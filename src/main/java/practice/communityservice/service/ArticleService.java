@@ -68,8 +68,7 @@ public class ArticleService {
     public void updateViewCount(UpdateViewCountRequestDto updateViewCountRequestDto){
 
         Long articleId = updateViewCountRequestDto.getArticleId();
-        int viewCount = updateViewCountRequestDto.getViewCount();
-        int rowsEffected = articleRepository.updateViewCount(articleId, viewCount);
+        int rowsEffected = articleRepository.updateViewCount(articleId);
 
         ValidatorBucket validatorBucket = ValidatorBucket.of()
                 .consistOf(new EffectedRowsValidator(1,rowsEffected));

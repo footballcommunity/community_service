@@ -36,8 +36,7 @@ public class ArticleController {
 
     @PatchMapping("/view")
     public UpdateViewCountResponseDto updateViweCountResponseDto(@RequestBody UpdateViewCountRequestDto updateViewCountRequestDto){
-        log.debug(String.valueOf(updateViewCountRequestDto.getViewCount()));
         articleService.updateViewCount(updateViewCountRequestDto);
-        return new UpdateViewCountResponseDto(updateViewCountRequestDto.getViewCount());
+        return new UpdateViewCountResponseDto("Success");
     }
 }

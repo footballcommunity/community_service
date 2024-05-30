@@ -40,9 +40,9 @@ public class ArticleRepository {
         return key.longValue();
     }
 
-    public int updateViewCount(Long articleId, int viewCount){
-        String sql = "UPDATE article as a set a.view_count = ?\n" +
+    public int updateViewCount(Long articleId){
+        String sql = "UPDATE article as a set a.view_count = a.view_count + 1\n" +
                 "WHERE a.id = ?";
-        return this.jdbcTemplate.update(sql, viewCount, articleId);
+        return this.jdbcTemplate.update(sql, articleId);
     }
 }
