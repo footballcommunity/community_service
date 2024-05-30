@@ -1,6 +1,7 @@
 package practice.communityservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
@@ -14,6 +15,7 @@ import practice.communityservice.service.ArticleService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/article")
+@Slf4j
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -34,6 +36,7 @@ public class ArticleController {
 
     @PatchMapping("/view")
     public UpdateViewCountResponseDto updateViweCountResponseDto(@RequestBody UpdateViewCountRequestDto updateViewCountRequestDto){
+        log.debug(String.valueOf(updateViewCountRequestDto.getViewCount()));
         articleService.updateViewCount(updateViewCountRequestDto);
         return new UpdateViewCountResponseDto(updateViewCountRequestDto.getViewCount());
     }

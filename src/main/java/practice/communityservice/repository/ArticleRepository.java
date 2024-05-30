@@ -41,7 +41,7 @@ public class ArticleRepository {
     }
 
     public int updateViewCount(Long articleId, int viewCount){
-        String sql = "UPDATE article as a set view_count = ?" +
+        String sql = "UPDATE article as a set a.view_count = ?\n" +
                 "WHERE a.id = ?";
         return this.jdbcTemplate.update(sql, viewCount, articleId);
     }
