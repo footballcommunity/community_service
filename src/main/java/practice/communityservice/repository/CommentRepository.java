@@ -29,7 +29,7 @@ public class CommentRepository {
                 "    FROM comment AS c\n" +
                 "    JOIN user AS u ON c.user_id = u.id\n" +
                 "    WHERE c.article_id = ?\n" +
-                "    ORDER BY c.date_created, c.parent_id;";
+                "    ORDER BY c.parent_id, c.date_created;";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(CommentDto.class), articleID);
     }
 
