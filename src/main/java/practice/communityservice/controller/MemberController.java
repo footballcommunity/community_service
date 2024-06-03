@@ -6,11 +6,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
 import practice.communityservice.dto.request.SigninRequestDto;
+import practice.communityservice.dto.request.SignoutRequestDto;
 import practice.communityservice.dto.request.SignupRequestDto;
+import practice.communityservice.dto.request.UpdateTokenRequestDto;
 import practice.communityservice.dto.response.SigninResponseDto;
+import practice.communityservice.dto.response.SignoutResponseDto;
 import practice.communityservice.dto.response.SignupResponseDto;
 import practice.communityservice.dto.response.UserInfoResponseDto;
 import practice.communityservice.service.MemberService;
+import practice.communityservice.utils.RedisUtils;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +33,11 @@ public class MemberController {
     SigninResponseDto signin(@RequestBody SigninRequestDto signinRequestDto){
         return memberService.signin(signinRequestDto);
     }
+
+    @PostMapping("/signout")
+    SignoutResponseDto signout(@RequestBody SignoutRequestDto signoutRequestDto){
+        return memberService.signout(signoutRequestDto);
+    }
     // 유저 정보 조회
     @GetMapping("/info")
     UserInfoResponseDto userInfo() {
@@ -36,6 +45,12 @@ public class MemberController {
         String email = userDetails.getEmail();
         return memberService.getUserInfo(email);
     }
+
+    @GetMapping("/refresh")
+    SigninResponseDto updateToken(@RequestBody UpdateTokenRequestDto updateTokenRequestDto){
+        return memberService.updateToken(updateTokenRequestDto.getRefreshToken());
+    }
+
     @GetMapping("/not-allowed-test")
     void notAllowedTest(){
     }

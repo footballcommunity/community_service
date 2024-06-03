@@ -4,19 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import practice.communityservice.utils.JwtUtils;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig{
-    private final JwtUtill jwtUtill;
+    private final JwtUtils jwtUtils;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
 
     @Bean
@@ -38,7 +38,8 @@ public class WebSecurityConfig{
                         "/members/signin",
                         "/members/signup",
                         "/board/**",
-                        "/article/**"
+                        "/article/**",
+                        "/members/refresh"
                 ).permitAll()
                 .anyRequest().authenticated()
         );
@@ -47,7 +48,7 @@ public class WebSecurityConfig{
                 .authenticationEntryPoint(this.jwtAuthEntryPoint));
 
         // Jwt Filter 추가
-        http.addFilterBefore(new JwtAuthFilter(jwtUtill), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

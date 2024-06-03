@@ -1,4 +1,4 @@
-package practice.communityservice.config;
+package practice.communityservice.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -16,20 +16,18 @@ import practice.communityservice.domain.model.enums.Role;
 import practice.communityservice.domain.model.enums.UserStatus;
 
 import java.security.Key;
-import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Slf4j
 @Component
-public class JwtUtill {
+public class JwtUtils {
 
     private final Key key;
     private final long accessTokenExpTime;
     private final long refreshTokenExpTime;
 
-    public JwtUtill(
+    public JwtUtils(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.access_token_expiration_time}") long accessTokenExpTime,
             @Value("${jwt.refresh_token_expiration_time}") long refreshTokenExpTime){
@@ -37,6 +35,14 @@ public class JwtUtill {
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpTime = accessTokenExpTime;
         this.refreshTokenExpTime = refreshTokenExpTime;
+    }
+
+    public long getAccessTokenExpTime() {
+        return accessTokenExpTime;
+    }
+
+    public long getRefreshTokenExpTime() {
+        return refreshTokenExpTime;
     }
 
     // AccessToken 생성
