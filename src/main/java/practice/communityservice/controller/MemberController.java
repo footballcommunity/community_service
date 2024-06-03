@@ -46,7 +46,7 @@ public class MemberController {
         return memberService.getUserInfo(email);
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     SigninResponseDto updateToken(@RequestBody UpdateTokenRequestDto updateTokenRequestDto){
         return memberService.updateToken(updateTokenRequestDto.getRefreshToken());
     }
