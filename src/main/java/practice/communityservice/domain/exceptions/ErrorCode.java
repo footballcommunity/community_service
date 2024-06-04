@@ -1,5 +1,6 @@
 package practice.communityservice.domain.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 @Getter
@@ -51,6 +52,7 @@ public enum ErrorCode {
      */
     SERVICE_UNAVAILABLE(5030);
 
+    @JsonValue
     private int code;
 
     ErrorCode(int code) {
