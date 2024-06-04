@@ -67,6 +67,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionDto unknownException(Exception exception) {
         GlobalExceptionHandler.log.error("error message", exception);
-        return new ExceptionDto(ErrorCode.INTERNAL_SERVER, "Internal server error");
+        return new ExceptionDto(ErrorCode.valueOf("INTERNAL_SERVER"), "Internal server error");
     }
 }
