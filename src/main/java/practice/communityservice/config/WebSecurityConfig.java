@@ -39,6 +39,7 @@ public class WebSecurityConfig{
                         "/members/signup",
                         "/board/**",
                         "/article/**",
+                        "/match/**",
                         "/members/refresh"
                 ).permitAll()
                 .anyRequest().authenticated()
