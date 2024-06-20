@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum MatchStatus {
     AVAILABLE("AVAILABLE"),
     HURRY("HURRY"),
-    FULL("FULL");
+    FULL("FULL"),
+    RELEASE("RELEASE");
     private final String value;
 
     MatchStatus(String value){
