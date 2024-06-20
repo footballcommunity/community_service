@@ -43,7 +43,7 @@ public class MatchRepository {
     };
     public List<Match> getMatchList(int page, int pageSize) {
         int pageStart = (page-1) * pageSize;
-        String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex" +
+        String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
                 "FROM `match` AS m\n" +
                 "ORDER BY m.time DESC LIMIT ?,?;";
         return jdbcTemplate.query(sql, matchRowMapper(), pageStart, pageSize);
