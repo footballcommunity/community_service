@@ -20,10 +20,10 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
 
-    public GetMatchListResponseDto getAllMatchList(int page, int pageSize, int blockSize) {
+    public GetMatchListResponseDto getAllMatchList(int page, int pageSize, int blockSize, LocalDateTime currentTime) {
         // DB
         // 날짜를 선택해서 보여 주는 거로
-        List<Match> matchList = matchRepository.getMatchList(page, pageSize);
+        List<Match> matchList = matchRepository.getMatchList(page, pageSize, currentTime);
         int matchCount = matchRepository.allMatchCount();
         // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()

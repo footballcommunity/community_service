@@ -25,7 +25,8 @@ public class MatchController {
     @GetMapping()
     public GetMatchListResponseDto getAllMatchList(@RequestParam(required = false, defaultValue = "1") int page,
                                                    @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                                   @RequestParam(required = false, defaultValue = "5") int blockSize){
-        return matchService.getAllMatchList(page, pageSize, blockSize);
+                                                   @RequestParam(required = false, defaultValue = "5") int blockSize,
+                                                   @RequestParam LocalDateTime currentTime){
+        return matchService.getAllMatchList(page, pageSize, blockSize, currentTime);
     }
 }
