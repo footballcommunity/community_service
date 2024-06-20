@@ -2,6 +2,7 @@ package practice.communityservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public class MatchController {
     public GetMatchListResponseDto getAllMatchList(@RequestParam(required = false, defaultValue = "1") int page,
                                                    @RequestParam(required = false, defaultValue = "10") int pageSize,
                                                    @RequestParam(required = false, defaultValue = "5") int blockSize,
-                                                   @RequestParam LocalDateTime currentTime){
+                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime currentTime){
         return matchService.getAllMatchList(page, pageSize, blockSize, currentTime);
     }
 }
