@@ -34,9 +34,9 @@ public class MatchRepository {
                     rs.getString("address"),
                     rs.getInt("price"),
                     rs.getString("info"),
-                    (MatchStatus) rs.getObject("status"),
+                    MatchStatus.valueOf(rs.getString("status")),
                     rs.getString("link"),
-                    (Sex) rs.getObject("sex")
+                    rs.getInt("sex")
             );
             return match;
         };

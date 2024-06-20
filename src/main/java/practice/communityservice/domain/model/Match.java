@@ -17,5 +17,5 @@ public class Match {
     private String info;
     private MatchStatus status;
     private String link;
-    private Sex sex;
+    private int sex;
 }
