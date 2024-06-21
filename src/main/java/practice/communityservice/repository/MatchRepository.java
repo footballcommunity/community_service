@@ -59,7 +59,7 @@ public class MatchRepository {
     public int getMatchCountByCurrentTime(LocalDateTime currentTime) {
         LocalDateTime nextDay = currentTime.plusDays(1);
         String sql = "SELECT COUNT(id) AS cnt FROM `match`\n" +
-                "WHERE DATE_FORMAT(?,'%Y-%m-%d 00:00:00') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s');";
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d 15:00:00') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s');";
         return jdbcTemplate.query(sql, (rs) -> {rs.next(); return rs.getInt("cnt");}, nextDay, currentTime);
     }
 }
