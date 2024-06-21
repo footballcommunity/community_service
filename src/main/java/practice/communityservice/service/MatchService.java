@@ -24,7 +24,7 @@ public class MatchService {
         // DB
         // 날짜를 선택해서 보여 주는 거로
         List<Match> matchList = matchRepository.getMatchList(page, pageSize, currentTime);
-        int matchCount = matchRepository.allMatchCount();
+        int matchCount = matchRepository.getMatchCountByCurrentTime(currentTime);
         // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()
                 .consistOf(new ValueNotZeroValidator(pageSize))
