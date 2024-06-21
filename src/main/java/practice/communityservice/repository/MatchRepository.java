@@ -2,6 +2,7 @@ package practice.communityservice.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class MatchRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -47,9 +49,11 @@ public class MatchRepository {
         LocalDateTime nextDay = currentTime.plusDays(1);
         String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
                 "FROM `match` AS m\n " +
-                "WHERE DATE_FORMAT(?,'%Y-%m-%d') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d')\n" +
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s')\n" +
                 "ORDER BY m.time ASC LIMIT ?,?;";
-        return jdbcTemplate.query(sql, matchRowMapper(), nextDay.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), pageStart, pageSize);
+        log.info("next Day {}",nextDay);
+        log.info("current {}", currentTime);
+        return jdbcTemplate.query(sql, matchRowMapper(), nextDay, currentTime, pageStart, pageSize);
     }
 
     public int allMatchCount() {
