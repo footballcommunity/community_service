@@ -49,7 +49,7 @@ public class MatchRepository {
         LocalDateTime nextDay = currentTime.plusDays(1);
         String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
                 "FROM `match` AS m\n " +
-                "WHERE DATE_FORMAT(?,'%Y-%m-%d 00:00:00') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s')\n" +
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d 15:00:00') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s')\n" +
                 "ORDER BY m.time ASC LIMIT ?,?;";
         log.info("next Day {}",nextDay);
         log.info("current {}", currentTime);
