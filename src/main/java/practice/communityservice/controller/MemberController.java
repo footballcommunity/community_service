@@ -48,7 +48,7 @@ public class MemberController {
 
     @PostMapping("/refresh")
     SigninResponseDto updateToken(@RequestBody UpdateTokenRequestDto updateTokenRequestDto){
-        return memberService.updateToken(updateTokenRequestDto.getRefreshToken());
+        return memberService.updateToken(updateTokenRequestDto);
     }
 
     @GetMapping("/not-allowed-test")

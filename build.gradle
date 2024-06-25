@@ -28,10 +28,13 @@ dependencies {
 
 	// Jdbc Log
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+    testImplementation 'org.projectlombok:lombok:1.18.22'
 
-	// Lombok
+    // Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 
 	// SpringBoot
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'

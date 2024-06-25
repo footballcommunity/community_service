@@ -13,7 +13,7 @@ public class PageDto {
         this.page = page;
         this.maxPage = (int) Math.ceil((double) totalCount / pageSize);
         this.startPage = (((int)(Math.ceil((double) page / blockSize))) - 1) * blockSize + 1;
-        this.endPage = startPage + blockSize - 1;
+                this.endPage = startPage + blockSize - 1;
         if(this.endPage  > this.maxPage){
             this.endPage = this.maxPage;
         }
