@@ -5,16 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import practice.communityservice.domain.model.UserDetails;
-import practice.communityservice.dto.request.SigninRequestDto;
-import practice.communityservice.dto.request.SignoutRequestDto;
-import practice.communityservice.dto.request.SignupRequestDto;
-import practice.communityservice.dto.request.UpdateTokenRequestDto;
-import practice.communityservice.dto.response.SigninResponseDto;
-import practice.communityservice.dto.response.SignoutResponseDto;
-import practice.communityservice.dto.response.SignupResponseDto;
-import practice.communityservice.dto.response.UserInfoResponseDto;
+import practice.communityservice.dto.request.*;
+import practice.communityservice.dto.response.*;
 import practice.communityservice.service.MemberService;
-import practice.communityservice.utils.RedisUtils;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,5 +47,15 @@ public class MemberController {
     @GetMapping("/not-allowed-test")
     void notAllowedTest(){
     }
-    // 회원 정보
+    // 회원 정보 수정
+    @PatchMapping("/username")
+    UpdateUsernameResponseDto updateUsername(@RequestBody UpdateUsernameRequestDto updateUsernameRequestDto){
+        return memberService.updateUsername(updateUsernameRequestDto);
+    }
+
+    @PatchMapping("/password")
+    UpdatePasswordResponseDto updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto){
+        return memberService.updatePassword(updatePasswordRequestDto);
+    }
+
 }

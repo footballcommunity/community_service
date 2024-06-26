@@ -2,22 +2,18 @@ package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import practice.communityservice.domain.exceptions.BadRequestException;
 import practice.communityservice.domain.exceptions.ErrorCode;
 import practice.communityservice.domain.exceptions.UnauthorizedException;
 import practice.communityservice.domain.model.UserDetails;
-import practice.communityservice.dto.request.SignoutRequestDto;
-import practice.communityservice.dto.request.UpdateTokenRequestDto;
-import practice.communityservice.dto.response.SignoutResponseDto;
+import practice.communityservice.dto.request.*;
+import practice.communityservice.dto.response.*;
 import practice.communityservice.utils.JwtUtils;
 import practice.communityservice.domain.model.User;
 import practice.communityservice.domain.validation.*;
-import practice.communityservice.dto.request.SigninRequestDto;
-import practice.communityservice.dto.request.SignupRequestDto;
-import practice.communityservice.dto.response.SigninResponseDto;
-import practice.communityservice.dto.response.SignupResponseDto;
-import practice.communityservice.dto.response.UserInfoResponseDto;
 import practice.communityservice.repository.MemberRepository;
 import practice.communityservice.utils.RedisUtils;
 
@@ -30,6 +26,8 @@ public class MemberService {
 private final MemberRepository memberRepository;
     private final JwtUtils jwtUtils;
     private final RedisUtils redisUtils;
+    private final PasswordEncoder passwordEncoder;
+
 
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         String email = signupRequestDto.getEmail();
@@ -38,7 +36,9 @@ private final MemberRepository memberRepository;
                 new DuplicatedEmailValidator(foundUser)
         );
         validatorBucket.validate();
-        Long id = memberRepository.save(signupRequestDto);
+        User newUser = User.from(signupRequestDto);
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        Long id = memberRepository.save(User.from(signupRequestDto));
         return new SignupResponseDto(id);
     }
 
@@ -50,7 +50,7 @@ private final MemberRepository memberRepository;
         // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()
                 .consistOf(new EmailExistValidator(foundUser))
-                .consistOf(new EmailPasswordMatchValidator(foundUser, password));
+                .consistOf(new EmailPasswordMatchValidator(passwordEncoder, foundUser, password));
         validatorBucket.validate();
         User user = foundUser.get();
         String accessToken = jwtUtils.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus());
@@ -107,5 +107,19 @@ private final MemberRepository memberRepository;
         return SignoutResponseDto.builder()
                 .message("로그아웃 성공")
                 .build();
+    }
+
+    public UpdateUsernameResponseDto updateUsername(UpdateUsernameRequestDto updateUsernameRequestDto) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getEmail();
+        memberRepository.updateUsername(email, updateUsernameRequestDto.getUsername());
+        return new UpdateUsernameResponseDto(updateUsernameRequestDto.getUsername());
+    }
+
+    public UpdatePasswordResponseDto updatePassword(UpdatePasswordRequestDto updatePasswordRequestDto) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getEmail();
+        memberRepository.updatePassword(email, passwordEncoder.encode(updatePasswordRequestDto.getPassword()));
+        return new UpdatePasswordResponseDto(email);
     }
 }
