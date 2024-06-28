@@ -19,7 +19,7 @@ public class EmailPasswordMatchValidator extends AbstractValidator{
     public void validate() {
         log.debug("ORIGIN PWD={}",destPassword);
         log.debug("SRC PWD={}",srcPassword);
-        if(!passwordEncoder.matches(destPassword, srcPassword)){
+        if(!passwordEncoder.matches(srcPassword, destPassword)){
             throw new BadRequestException(
                     ErrorCode.INVALID_USER_DATA_REQUEST,
                     "비밀번호가 틀립니다."
