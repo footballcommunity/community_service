@@ -49,7 +49,7 @@ public class MatchRepository {
                 "FROM `match` AS m\n " +
                 "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s')\n" +
                 "ORDER BY m.time ASC;";
-        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime);
+        return jdbcTemplate.query(sql, matchRowMapper(), endTime, startTime);
     }
 
     public List<Match> getMatchList(LocalDateTime startTime, LocalDateTime endTime, MatchStatus matchStatus) {
@@ -57,7 +57,7 @@ public class MatchRepository {
                 "FROM `match` AS m\n " +
                 "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s') AND m.status != ?\n" +
                 "ORDER BY m.time ASC;";
-        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime, matchStatus.getValue());
+        return jdbcTemplate.query(sql, matchRowMapper(), endTime, startTime, matchStatus.getValue());
     }
 
     public List<Match> getMatchList(LocalDateTime startTime, LocalDateTime endTime, Sex sex) {
@@ -65,7 +65,7 @@ public class MatchRepository {
                 "FROM `match` AS m\n " +
                 "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s') AND m.sex = ?\n" +
                 "ORDER BY m.time ASC;";
-        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime, sex.getValue());
+        return jdbcTemplate.query(sql, matchRowMapper(), endTime, startTime, sex.getValue());
     }
 
     public List<Match> getMatchList(LocalDateTime startTime, LocalDateTime endTime, MatchStatus matchStatus, Sex sex) {
@@ -73,7 +73,7 @@ public class MatchRepository {
                 "FROM `match` AS m\n " +
                 "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s') AND m.status != ? AND m.sex = ?\n" +
                 "ORDER BY m.time ASC;";
-        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime, matchStatus.getValue(), sex.getValue());
+        return jdbcTemplate.query(sql, matchRowMapper(), endTime, startTime, matchStatus.getValue(), sex.getValue());
     }
 
     public int getMatchCountByCurrentTime(LocalDateTime currentTime) {
