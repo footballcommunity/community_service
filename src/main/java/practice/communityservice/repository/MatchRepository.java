@@ -44,16 +44,36 @@ public class MatchRepository {
             return match;
         };
     };
-    public List<Match> getMatchList(int page, int pageSize, LocalDateTime currentTime) {
-        int pageStart = (page-1) * pageSize;
-        LocalDateTime nextDay = currentTime.plusDays(1);
+    public List<Match> getMatchList( LocalDateTime startTime, LocalDateTime endTime) {
         String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
                 "FROM `match` AS m\n " +
-                "WHERE DATE_FORMAT(?,'%Y-%m-%d 15:00:00') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s')\n" +
-                "ORDER BY m.time ASC LIMIT ?,?;";
-        log.info("next Day {}",nextDay);
-        log.info("current {}", currentTime);
-        return jdbcTemplate.query(sql, matchRowMapper(), nextDay, currentTime, pageStart, pageSize);
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s')\n" +
+                "ORDER BY m.time ASC;";
+        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime);
+    }
+
+    public List<Match> getMatchList(LocalDateTime startTime, LocalDateTime endTime, MatchStatus matchStatus) {
+        String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
+                "FROM `match` AS m\n " +
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s') AND m.status != ?\n" +
+                "ORDER BY m.time ASC;";
+        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime, matchStatus.getValue());
+    }
+
+    public List<Match> getMatchList(LocalDateTime startTime, LocalDateTime endTime, Sex sex) {
+        String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
+                "FROM `match` AS m\n " +
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s') AND m.sex = ?\n" +
+                "ORDER BY m.time ASC;";
+        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime, sex.getValue());
+    }
+
+    public List<Match> getMatchList(LocalDateTime startTime, LocalDateTime endTime, MatchStatus matchStatus, Sex sex) {
+        String sql = "SELECT m.id AS id, m.title AS title, m.time AS time, m.address AS address, m.price AS price, m.info AS info, m.status AS status, m.link AS link, m.sex AS sex\n" +
+                "FROM `match` AS m\n " +
+                "WHERE DATE_FORMAT(?,'%Y-%m-%d %H:%m:%s') > time AND time >= DATE_FORMAT(?, '%Y-%m-%d %H:%m:%s') AND m.status != ? AND m.sex = ?\n" +
+                "ORDER BY m.time ASC;";
+        return jdbcTemplate.query(sql, matchRowMapper(), startTime, endTime, matchStatus.getValue(), sex.getValue());
     }
 
     public int getMatchCountByCurrentTime(LocalDateTime currentTime) {

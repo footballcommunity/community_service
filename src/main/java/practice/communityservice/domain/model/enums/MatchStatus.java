@@ -7,7 +7,9 @@ public enum MatchStatus {
     AVAILABLE("AVAILABLE"),
     HURRY("HURRY"),
     FULL("FULL"),
-    RELEASE("RELEASE");
+    RELEASE("RELEASE"),
+    ALL("ALL");
+
     private final String value;
 
     MatchStatus(String value){

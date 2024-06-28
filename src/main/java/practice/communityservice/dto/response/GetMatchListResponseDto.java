@@ -12,6 +12,5 @@ import java.util.List;
 @Setter
 @Builder
 public class GetMatchListResponseDto {
-    private PageDto page;
     private List<Match> matchList;
 }

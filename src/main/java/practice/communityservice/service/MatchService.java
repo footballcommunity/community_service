@@ -3,12 +3,12 @@ package practice.communityservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import practice.communityservice.domain.model.Match;
-import practice.communityservice.domain.model.Page;
+import practice.communityservice.domain.model.enums.MatchStatus;
+import practice.communityservice.domain.model.enums.Sex;
 import practice.communityservice.domain.validation.ValidatorBucket;
 import practice.communityservice.domain.validation.ValueNotZeroValidator;
 import practice.communityservice.dto.PageDto;
 import practice.communityservice.dto.response.GetMatchListResponseDto;
-import practice.communityservice.dto.response.GetPageListResponseDto;
 import practice.communityservice.repository.MatchRepository;
 
 import java.time.LocalDateTime;
@@ -20,26 +20,22 @@ public class MatchService {
 
     private final MatchRepository matchRepository;
 
-    public GetMatchListResponseDto getAllMatchList(int page, int pageSize, int blockSize, LocalDateTime currentTime) {
+    public GetMatchListResponseDto getAllMatchList(LocalDateTime startTime, LocalDateTime endTime, Sex sex, MatchStatus matchStatus) {
         // DB
         // 날짜를 선택해서 보여 주는 거로
-        List<Match> matchList = matchRepository.getMatchList(page, pageSize, currentTime);
-        int matchCount = matchRepository.getMatchCountByCurrentTime(currentTime);
-        // Validation
-        ValidatorBucket validatorBucket = ValidatorBucket.of()
-                .consistOf(new ValueNotZeroValidator(pageSize))
-                .consistOf(new ValueNotZeroValidator(blockSize));
-        validatorBucket.validate();
-        // Logic
-        int maxPage = (int) Math.ceil((double) matchCount / pageSize);
-        int startPage = (((int)(Math.ceil((double) page / blockSize))) - 1) * blockSize + 1;
-        int endPage = startPage + blockSize - 1;
-        if(endPage  > maxPage){
-            endPage = maxPage;
+        // 성별, status 필터링 안하는 경우
+        List<Match> matchList;
+        if(sex == Sex.ALL && matchStatus == MatchStatus.ALL){
+            matchList = matchRepository.getMatchList(startTime, endTime);
+        } else if (sex == Sex.ALL && matchStatus != MatchStatus.ALL) {
+            matchList = matchRepository.getMatchList(startTime, endTime, matchStatus);
+        } else if (sex != Sex.ALL && matchStatus == MatchStatus.ALL) {
+            matchList = matchRepository.getMatchList(startTime, endTime, sex);
+        } else {
+            matchList = matchRepository.getMatchList(startTime, endTime, matchStatus,sex);
         }
-        PageDto pageDto = new PageDto(matchCount, pageSize, blockSize, page);
+
         return GetMatchListResponseDto.builder()
-                .page(pageDto)
                 .matchList(matchList)
                 .build();
     }

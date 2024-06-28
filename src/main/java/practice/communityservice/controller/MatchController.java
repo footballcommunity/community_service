@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import practice.communityservice.domain.model.enums.MatchStatus;
+import practice.communityservice.domain.model.enums.Sex;
 import practice.communityservice.dto.response.GetMatchListResponseDto;
 import practice.communityservice.service.MatchService;
 
@@ -24,10 +26,11 @@ public class MatchController {
     private final MatchService matchService;
 
     @GetMapping()
-    public GetMatchListResponseDto getAllMatchList(@RequestParam(required = false, defaultValue = "1") int page,
-                                                   @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                                   @RequestParam(required = false, defaultValue = "5") int blockSize,
-                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime currentTime){
-        return matchService.getAllMatchList(page, pageSize, blockSize, currentTime);
+    public GetMatchListResponseDto getAllMatchList(
+                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime startTime,
+                                                   @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime endTime,
+                                                   @RequestParam Sex sex,
+                                                   @RequestParam MatchStatus matchStatus){
+        return matchService.getAllMatchList(startTime, endTime, sex, matchStatus);
     }
 }
