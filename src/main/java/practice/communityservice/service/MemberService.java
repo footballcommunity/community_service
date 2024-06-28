@@ -38,7 +38,7 @@ private final MemberRepository memberRepository;
         validatorBucket.validate();
         User newUser = User.from(signupRequestDto);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        Long id = memberRepository.save(User.from(signupRequestDto));
+        Long id = memberRepository.save(newUser);
         return new SignupResponseDto(id);
     }
 
