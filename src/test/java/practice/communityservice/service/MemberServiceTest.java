@@ -11,14 +11,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import practice.communityservice.domain.exceptions.UnauthorizedException;
 import practice.communityservice.domain.model.User;
 import practice.communityservice.domain.model.enums.Role;
 import practice.communityservice.domain.model.enums.UserStatus;
 import practice.communityservice.dto.request.SigninRequestDto;
+import practice.communityservice.dto.request.SignupRequestDto;
 import practice.communityservice.dto.request.UpdateTokenRequestDto;
 import practice.communityservice.dto.response.SigninResponseDto;
+import practice.communityservice.dto.response.SignupResponseDto;
 import practice.communityservice.repository.MemberRepository;
 import practice.communityservice.utils.JwtUtils;
 import practice.communityservice.utils.RedisUtils;
@@ -32,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberServiceTest {
     private MemberService memberService;
     private JwtUtils jwtUtils;
+    private PasswordEncoder passwordEncoder;
     @MockBean
     private MemberRepository memberRepository;
     @MockBean
@@ -40,10 +45,13 @@ class MemberServiceTest {
     @BeforeEach
     void setUp(){
         jwtUtils = new JwtUtils("asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd", 60000, 60000);
+        passwordEncoder = new BCryptPasswordEncoder();
+
         memberService = new MemberService(
                 memberRepository,
                 jwtUtils,
-                redisUtils
+                redisUtils,
+                passwordEncoder
         );
     }
 
@@ -110,4 +118,25 @@ class MemberServiceTest {
         ;},"유효하지 않은 토큰입니다");
     }
 
+    @Test
+    void signup() {
+        // given
+        String password = passwordEncoder.encode("abc");
+        User user = new User(1L, Role.MEMBER, "99@naver.com", "상상", password, LocalDateTime.now(),UserStatus.ACTIVE);
+        SignupRequestDto signupRequestDto = new SignupRequestDto(Role.MEMBER, "99@naver.com", "상상", "abc", UserStatus.ACTIVE);
+        Mockito.when(memberRepository.findByEmail("99@naver.com")).thenReturn(Optional.empty()); // 가짜 객체 응답 정의
+        // when
+        SignupResponseDto response = memberService.signup(signupRequestDto);
+        Mockito.when(memberRepository.findByEmail("99@naver.com")).thenReturn(Optional.of(user)); // 가짜 객체 응답 정의
+        System.out.println(response);
+        // then
+        assertDoesNotThrow((Executable) memberService.signin(new SigninRequestDto("99@naver.com", "abc")));
+    }
+    @Test
+    void test(){
+        String pwd = "abc";
+        String a = passwordEncoder.encode(pwd);
+        String b = passwordEncoder.encode(pwd);
+        assertEquals(a,b);
+    }
 }
