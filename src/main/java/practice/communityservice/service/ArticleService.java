@@ -1,8 +1,10 @@
 package practice.communityservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import practice.communityservice.domain.model.Comment;
+import practice.communityservice.domain.model.UserDetails;
 import practice.communityservice.domain.validation.AuthorUserMatchValidator;
 import practice.communityservice.domain.validation.EffectedRowsValidator;
 import practice.communityservice.domain.validation.ObjectNotNullValidator;
@@ -53,7 +55,8 @@ public class ArticleService {
     }
 
     public PostArticleResponseDto postArticle(PostArticleRequestDto postArticleRequestDto, Long categoryId, Long loginUserId) {
-        Long authorId = postArticleRequestDto.getAuthorId();
+        UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long authorId = principal.getUserId();
         String title = postArticleRequestDto.getTitle();
         String content = postArticleRequestDto.getContent();
         Long postId = articleRepository.postArticle(authorId, categoryId, title, content);
