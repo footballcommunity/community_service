@@ -137,6 +137,6 @@ class MemberServiceTest {
         String pwd = "abc";
         String a = passwordEncoder.encode(pwd);
         String b = passwordEncoder.encode(pwd);
-        assertEquals(a,b);
+        assertTrue(passwordEncoder.matches(pwd,b));
     }
 }
