@@ -13,13 +13,13 @@ import java.util.Optional;
 @Slf4j
 public class EmailPasswordMatchValidator extends AbstractValidator{
     private final PasswordEncoder passwordEncoder;
-    private final Optional<User> foundUser;
+    private final String destPassword;
     private final String srcPassword;
     @Override
     public void validate() {
-        log.debug("ORIGIN PWD={}",foundUser.get().getPassword());
+        log.debug("ORIGIN PWD={}",destPassword);
         log.debug("SRC PWD={}",srcPassword);
-        if(!foundUser.get().getPassword().equals(passwordEncoder.encode(srcPassword))){
+        if(!destPassword.equals(passwordEncoder.encode(srcPassword))){
             throw new BadRequestException(
                     ErrorCode.INVALID_USER_DATA_REQUEST,
                     "비밀번호가 틀립니다."

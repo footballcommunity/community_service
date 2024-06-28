@@ -50,7 +50,7 @@ private final MemberRepository memberRepository;
         // Validation
         ValidatorBucket validatorBucket = ValidatorBucket.of()
                 .consistOf(new EmailExistValidator(foundUser))
-                .consistOf(new EmailPasswordMatchValidator(passwordEncoder, foundUser, password));
+                .consistOf(new EmailPasswordMatchValidator(passwordEncoder, foundUser.get().getPassword(), password));
         validatorBucket.validate();
         User user = foundUser.get();
         String accessToken = jwtUtils.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus());
