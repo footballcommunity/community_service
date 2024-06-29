@@ -1,6 +1,8 @@
 package practice.communityservice.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class MemberController {
 
     // 회원 가입
     @PostMapping("/signup")
-    SignupResponseDto signup(@RequestBody SignupRequestDto signupRequestDto) {
+    SignupResponseDto signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         return memberService.signup(signupRequestDto);
     }
 
