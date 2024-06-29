@@ -18,19 +18,21 @@ public class MemberController {
 
     // 회원 가입
     @PostMapping("/signup")
-    SignupResponseDto signup(@RequestBody SignupRequestDto signupRequestDto){
+    SignupResponseDto signup(@RequestBody SignupRequestDto signupRequestDto) {
         return memberService.signup(signupRequestDto);
     }
+
     // 로그인
     @PostMapping("/signin")
-    SigninResponseDto signin(@RequestBody SigninRequestDto signinRequestDto){
+    SigninResponseDto signin(@RequestBody SigninRequestDto signinRequestDto) {
         return memberService.signin(signinRequestDto);
     }
 
     @PostMapping("/signout")
-    SignoutResponseDto signout(@RequestBody SignoutRequestDto signoutRequestDto){
+    SignoutResponseDto signout(@RequestBody SignoutRequestDto signoutRequestDto) {
         return memberService.signout(signoutRequestDto);
     }
+
     // 유저 정보 조회
     @GetMapping("/info")
     UserInfoResponseDto userInfo() {
@@ -40,21 +42,22 @@ public class MemberController {
     }
 
     @PostMapping("/refresh")
-    SigninResponseDto updateToken(@RequestBody UpdateTokenRequestDto updateTokenRequestDto){
+    SigninResponseDto updateToken(@RequestBody UpdateTokenRequestDto updateTokenRequestDto) {
         return memberService.updateToken(updateTokenRequestDto);
     }
 
     @GetMapping("/not-allowed-test")
-    void notAllowedTest(){
+    void notAllowedTest() {
     }
+
     // 회원 정보 수정
     @PatchMapping("/username")
-    UpdateUsernameResponseDto updateUsername(@RequestBody UpdateUsernameRequestDto updateUsernameRequestDto){
+    UpdateUsernameResponseDto updateUsername(@RequestBody UpdateUsernameRequestDto updateUsernameRequestDto) {
         return memberService.updateUsername(updateUsernameRequestDto);
     }
 
     @PatchMapping("/password")
-    UpdatePasswordResponseDto updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto){
+    UpdatePasswordResponseDto updatePassword(@RequestBody UpdatePasswordRequestDto updatePasswordRequestDto) {
         return memberService.updatePassword(updatePasswordRequestDto);
     }
 

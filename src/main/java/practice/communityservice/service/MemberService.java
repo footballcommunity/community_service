@@ -31,10 +31,9 @@ public class MemberService {
     public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
         String email = signupRequestDto.getEmail();
         Optional<User> foundUser = memberRepository.findByEmail(email);
-        ValidatorBucket validatorBucket = ValidatorBucket.of().consistOf(
-                new DuplicatedEmailValidator(foundUser)
-        );
-        validatorBucket.validate();
+        ValidatorBucket.of()
+                .consistOf(new DuplicatedEmailValidator(foundUser))
+                .validate();
         User newUser = User.from(signupRequestDto);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         Long id = memberRepository.save(newUser);
@@ -42,7 +41,6 @@ public class MemberService {
     }
 
     public SigninResponseDto signin(SigninRequestDto signinRequestDto) {
-
         // DB 조회
         User foundUser = memberRepository.findByEmail(signinRequestDto.getEmail()).orElseThrow(
                 () -> new UnauthorizedException(
@@ -68,24 +66,24 @@ public class MemberService {
     }
 
     public UserInfoResponseDto getUserInfo(String email) {
-        log.debug("login user email : " + email);
-        //DB 조회
-        Optional<User> foundUser = memberRepository.findByEmail(email);
-        // Validation
-        ValidatorBucket validatorBucket = ValidatorBucket.of()
-                .consistOf(new ObjectNotNullValidator(foundUser))
-                .consistOf(new EmailExistValidator(foundUser));
-        validatorBucket.validate();
 
-        User user = foundUser.get();
-        return UserInfoResponseDto.from(user);
+        //DB 조회
+        User foundUser = memberRepository.findByEmail(email).orElseThrow(
+                () -> new BadRequestException(
+                        ErrorCode.ROW_DOES_NOT_EXIST,
+                        "로그인된 사용자를 찾을 수 없습니다."
+                )
+        );
+        // Validation
+        ValidatorBucket.of()
+                .consistOf(new UserStateValidator(foundUser.getStatus()))
+                .validate();
+
+        return UserInfoResponseDto.from(foundUser);
     }
 
     public SigninResponseDto updateToken(UpdateTokenRequestDto updateTokenRequestDto) {
-        // 1. refreshToken 유효성 검사
-        if (!jwtUtils.validateToken(updateTokenRequestDto.getRefreshToken()))
-            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH, "유효하지 않은 토큰입니다");
-        // 2. AccessToken의 id 와 refreshToken의 id 일치
+        // 1. refreshToken의 id 일치 여부 확인, 유효성 확인
         UserDetails userDetails = (UserDetails) jwtUtils.getAuthentication(updateTokenRequestDto.getAccessToken()).getPrincipal();
         String email = userDetails.getEmail();
         if (updateTokenRequestDto.getRefreshToken() != redisUtils.getData(email))
@@ -94,10 +92,13 @@ public class MemberService {
         User user = memberRepository.findByEmail(email).orElseThrow(
                 () -> new BadRequestException(
                         ErrorCode.ROW_DOES_NOT_EXIST,
-                        "RefreshToken 검증 실패"
+                        "사용자를 찾을 수 없습니다"
                 )
         );
-        //3. Token 생성 redis 저장
+        ValidatorBucket.of()
+                .consistOf(new UserStateValidator(user.getStatus()))
+                .validate();
+        //2. Token 생성 redis 저장
         String newAccessToken = jwtUtils.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus());
         String newRefreshToken = jwtUtils.createRefreshToken();
         redisUtils.setData(user.getEmail(), newRefreshToken, jwtUtils.getRefreshTokenExpTime());
