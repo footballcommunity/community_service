@@ -1,5 +1,6 @@
 package practice.communityservice.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import practice.communityservice.domain.model.enums.MatchStatus;
 import practice.communityservice.domain.model.enums.MatchType;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 public class PostMatchRequestDto {
     private String title;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime time;
     private String address;
     private int price;

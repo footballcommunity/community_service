@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 public class Match {
     private Long id;
     private String title;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
     private String address;
     private int price;
