@@ -83,7 +83,9 @@ public class MemberService {
     }
 
     public SigninResponseDto updateToken(UpdateTokenRequestDto updateTokenRequestDto) {
+
         // 1. refreshToken의 id 일치 여부 확인, 유효성 확인
+        jwtUtils.validateToken(updateTokenRequestDto.getRefreshToken());
         UserDetails userDetails = (UserDetails) jwtUtils.getAuthentication(updateTokenRequestDto.getAccessToken()).getPrincipal();
         String email = userDetails.getEmail();
         if (updateTokenRequestDto.getRefreshToken() != redisUtils.getData(email))
