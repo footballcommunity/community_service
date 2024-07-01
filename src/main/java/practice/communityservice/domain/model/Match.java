@@ -3,6 +3,7 @@ package practice.communityservice.domain.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 import practice.communityservice.domain.model.enums.MatchStatus;
 import practice.communityservice.domain.model.enums.MatchType;
 import practice.communityservice.domain.model.enums.Sex;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class Match {
     private Long id;
     private String title;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
     private String address;
     private int price;
