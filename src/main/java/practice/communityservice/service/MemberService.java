@@ -58,7 +58,7 @@ public class MemberService {
         String accessToken = jwtUtils.createAccessToken(foundUser.getId(), foundUser.getEmail(), foundUser.getRole(), foundUser.getStatus());
         String refreshToken = jwtUtils.createRefreshToken();
         // refreshToken -> Redis 보관
-        redisUtils.setData(foundUser.getEmail(), refreshToken, jwtUtils.getRefreshTokenExpTime());
+        redisUtils.setData(refreshToken, foundUser.getEmail(), jwtUtils.getRefreshTokenExpTime());
         return SigninResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -85,11 +85,8 @@ public class MemberService {
     public SigninResponseDto updateToken(UpdateTokenRequestDto updateTokenRequestDto) {
 
         // 1. refreshToken의 id 일치 여부 확인, 유효성 확인
-        jwtUtils.validateToken(updateTokenRequestDto.getRefreshToken());
-        UserDetails userDetails = (UserDetails) jwtUtils.getAuthentication(updateTokenRequestDto.getAccessToken()).getPrincipal();
-        String email = userDetails.getEmail();
-        if (updateTokenRequestDto.getRefreshToken() != redisUtils.getData(email))
-            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH, "유효하지 않은 토큰입니다");
+        String email = Optional.ofNullable(redisUtils.getData(updateTokenRequestDto.getRefreshToken()))
+                .orElseThrow(() -> new UnauthorizedException(ErrorCode.INVALID_REFRESH, "유효하지 않은 RefreshToken 입니다."));
 
         User user = memberRepository.findByEmail(email).orElseThrow(
                 () -> new BadRequestException(

@@ -276,7 +276,7 @@ class MemberServiceTest {
         String accessToken = jwtUtils.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus());
         String refreshToken = jwtUtils.createRefreshToken();
         //redis에 refreshToken 저장
-        Mockito.when(redisUtils.getData(user.getEmail())).thenReturn(refreshToken);
+        Mockito.when(redisUtils.getData(refreshToken)).thenReturn(user.getEmail());
         Mockito.when(memberRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         // then
@@ -308,7 +308,7 @@ class MemberServiceTest {
         String accessToken = jwtUtils.createAccessToken(user.getId(), user.getEmail(), user.getRole(), user.getStatus());
         String refreshToken = jwtUtils.createRefreshToken();
         //redis에 refreshToken 저장
-        Mockito.when(redisUtils.getData(user.getEmail())).thenReturn(refreshToken);
+        Mockito.when(redisUtils.getData(refreshToken)).thenReturn(user.getEmail());
         Mockito.when(memberRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         String wrongRefreshToken = refreshToken + "asd";
         // then
@@ -337,7 +337,7 @@ class MemberServiceTest {
         String refreshToken = jwtUtils.createRefreshToken();
         String wrongRefreshToken = "wrongRefreshToken";
         //redis에 refreshToken 저장
-        Mockito.when(redisUtils.getData(user.getEmail())).thenReturn(refreshToken);
+        Mockito.when(redisUtils.getData(refreshToken)).thenReturn(user.getEmail());
         Mockito.when(memberRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         // then
         assertThrows(UnauthorizedException.class, () -> memberService.updateToken(new UpdateTokenRequestDto(accessToken, wrongRefreshToken)));
@@ -346,6 +346,8 @@ class MemberServiceTest {
     @Test
     @DisplayName("updateToken 실패 토큰 만료")
     public void updateTokenFailByUnmatchedToken() {
+        jwtUtils = new JwtUtils("asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd", 1, 1);
+
         // given
         User user = new User(
                 1L,
@@ -362,7 +364,7 @@ class MemberServiceTest {
         String refreshToken = jwtUtils.createRefreshToken();
         //불일치 토큰
         //redis에 refreshToken 저장
-        Mockito.when(redisUtils.getData(user.getEmail())).thenReturn(null); // 만료되어 redis에서 토큰 삭제
+        Mockito.when(redisUtils.getData(refreshToken)).thenReturn(null); // 만료되어 redis에서 토큰 삭제
         Mockito.when(memberRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         // then
