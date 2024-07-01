@@ -17,17 +17,19 @@ import practice.communityservice.utils.JwtUtils;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig{
+public class WebSecurityConfig {
     private final JwtUtils jwtUtils;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //CSRF, CORS
-        http.csrf((csrf)-> csrf.disable());
+        http.csrf((csrf) -> csrf.disable());
         // 다른 도메인에서 접근 허용
         http.cors(Customizer.withDefaults());
         // Session 비활성화
@@ -44,7 +46,7 @@ public class WebSecurityConfig{
                         "/members/signup",
                         "/board/**",
                         "/article/**",
-                        "/match/**",
+                        "/match",
                         "/members/refresh"
                 ).permitAll()
                 .anyRequest().authenticated()

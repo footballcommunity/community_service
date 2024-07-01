@@ -6,7 +6,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 public class Page {
     private Long articleId;
@@ -16,4 +17,5 @@ public class Page {
     private int viewCount;
     private LocalDateTime dateCreated;
     private LocalDateTime dateUpdated;
+    private int likeCount;
 }
